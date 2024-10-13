@@ -1,3 +1,4 @@
+package logs;
 import java.util.concurrent.Semaphore;
 
 class Bucket {
