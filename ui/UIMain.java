@@ -10,6 +10,15 @@ import java.awt.*;
 
 public class UIMain {
     public static void main(String[] args) {
+        if (args.length < 3) {
+            System.out.println("Usage: java TerminalMain <bucket_size> <token_rate(ms)> <packet_rate(ms)>");
+            System.exit(1);
+        }
+
+        int bucketSize = Integer.parseInt(args[0]);
+        int tokenRate = Integer.parseInt(args[1]);
+        int packetRate = Integer.parseInt(args[2]);
+
         JFrame frame = new JFrame("Token Bucket Simulator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 300);
@@ -21,8 +30,8 @@ public class UIMain {
         UILogger logger = new UILogger(logArea);
         Bucket bucket = new Bucket(10, logger);
 
-        TokenGenerator tokenGen = new TokenGenerator(bucket);
-        PacketGenerator packetGen = new PacketGenerator(bucket);
+        TokenGenerator tokenGen = new TokenGenerator(bucket, 1000);
+        PacketGenerator packetGen = new PacketGenerator(bucket, 2000);
 
         JButton startButton = new JButton("Start Simulation");
         JButton stopButton = new JButton("Stop Simulation");
