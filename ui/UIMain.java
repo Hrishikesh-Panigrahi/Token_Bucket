@@ -1,8 +1,9 @@
 package ui;
 
 import src.Bucket;
-import src.TokenGenerator;
 import src.PacketGenerator;
+import src.TokenGenerator;
+import src.UILogger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +24,7 @@ public class UIMain {
         JButton startButton = new JButton("Start Simulation");
         JButton stopButton = new JButton("Stop Simulation");
 
-        Bucket bucket = new Bucket(10);
+        Bucket bucket = new Bucket(10, new UILogger(logArea));
         TokenGenerator tokenGen = new TokenGenerator(bucket);
         PacketGenerator packetGen = new PacketGenerator(bucket);
 

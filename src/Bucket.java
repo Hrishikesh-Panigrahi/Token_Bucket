@@ -1,7 +1,5 @@
 package src;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.concurrent.Semaphore;
 
 public class Bucket {
@@ -10,12 +8,14 @@ public class Bucket {
     private int totalTokensAdded = 0;
     private int totalPacketsSent = 0;
     private int totalPacketsDiscarded = 0;
+    private final Logger logger;
 
-    public Bucket(int maxSize) {
+
+    public Bucket(int maxSize, Logger logger) {
         this.maxSize = maxSize;
         this.tokens = new Semaphore(0);
+        this.logger = logger;
     }
-
 
     // ANSI color codes for better visibility
     private static final String GREEN = "\u001B[32m";
@@ -23,30 +23,25 @@ public class Bucket {
     private static final String YELLOW = "\u001B[33m";
     private static final String RESET = "\u001B[0m";
 
-    // Log messages with timestamp
-    public void log(String message, String color) {
-        String timestamp = new SimpleDateFormat("HH:mm:ss").format(new Date());
-        System.out.println(color + "[" + timestamp + "] " + message + RESET);
-    }
 
     public synchronized boolean addToken() {
         if (tokens.availablePermits() < maxSize) {
             tokens.release();
             totalTokensAdded++;
-            log("Added a token. Total tokens: " + tokens.availablePermits(), GREEN);
+            logger.log("Added a token. Total tokens: " + tokens.availablePermits(), GREEN);
             visualize();
             return true;
         }
-        log("Bucket is full. No token added.", YELLOW);
+        logger.log("Bucket is full. No token added.", YELLOW);
         return false;
     }
 
     public synchronized boolean sendPacket(int size) {
-        log("Packet of size " + size + " arrived.", YELLOW);
+        logger.log("Packet of size " + size + " arrived.", YELLOW);
 
         if (size > tokens.availablePermits()) {
             totalPacketsDiscarded++;
-            log("Packet is non-conformant, discarded.", RED);
+            logger.log("Packet is non-conformant, discarded.", RED);
             return false;
         }
 
@@ -54,8 +49,8 @@ public class Bucket {
             tokens.acquireUninterruptibly();
         }
         totalPacketsSent++;
-        log("Packet of size " + size + " sent successfully.", GREEN);
-        log("Remaining tokens: " + tokens.availablePermits(), GREEN);
+        logger.log("Packet of size " + size + " sent successfully.", GREEN);
+        logger.log("Remaining tokens: " + tokens.availablePermits(), GREEN);
         visualize();
         return true;
     }

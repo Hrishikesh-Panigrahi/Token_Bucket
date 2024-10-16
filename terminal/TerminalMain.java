@@ -3,10 +3,11 @@ package terminal;
 import src.Bucket;
 import src.TokenGenerator;
 import src.PacketGenerator;
+import src.TerminalLogger;
 
 public class TerminalMain {
     public static void main(String[] args) {
-        Bucket bucket = new Bucket(10);  
+        Bucket bucket = new Bucket(10, new TerminalLogger());  
         TokenGenerator tokenGen = new TokenGenerator(bucket);
         PacketGenerator packetGen = new PacketGenerator(bucket);
 
