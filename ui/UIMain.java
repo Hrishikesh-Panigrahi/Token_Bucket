@@ -14,30 +14,30 @@ public class UIMain {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 300);
 
-        JLabel tokenLabel = new JLabel("Tokens: 0/10", SwingConstants.CENTER);
-        tokenLabel.setFont(new Font("Arial", Font.BOLD, 20));
-
         JTextArea logArea = new JTextArea(8, 30);
         logArea.setEditable(false);
         JScrollPane logScrollPane = new JScrollPane(logArea);
 
-        JButton startButton = new JButton("Start Simulation");
-        JButton stopButton = new JButton("Stop Simulation");
+        UILogger logger = new UILogger(logArea);
+        Bucket bucket = new Bucket(10, logger);
 
-        Bucket bucket = new Bucket(10, new UILogger(logArea));
         TokenGenerator tokenGen = new TokenGenerator(bucket);
         PacketGenerator packetGen = new PacketGenerator(bucket);
 
+        JButton startButton = new JButton("Start Simulation");
+        JButton stopButton = new JButton("Stop Simulation");
+
         startButton.addActionListener(e -> {
-            if (!tokenGen.isAlive()) tokenGen.start();
-            if (!packetGen.isAlive()) packetGen.start();
-            logArea.append("Simulation started...\n");
+            tokenGen.start();
+            packetGen.start();
+            logger.log("Simulation started...", "GREEN");
         });
 
         stopButton.addActionListener(e -> {
             tokenGen.stopRunning();
             packetGen.stopRunning();
-            logArea.append("Simulation stopped.\n");
+            bucket.displaySummary(); // Display summary in UI
+            logger.log("Simulation stopped.", "RED");
         });
 
         JPanel buttonPanel = new JPanel();
@@ -45,10 +45,8 @@ public class UIMain {
         buttonPanel.add(stopButton);
 
         frame.setLayout(new BorderLayout());
-        frame.add(tokenLabel, BorderLayout.NORTH);
         frame.add(logScrollPane, BorderLayout.CENTER);
         frame.add(buttonPanel, BorderLayout.SOUTH);
-
         frame.setVisible(true);
     }
 }

@@ -5,11 +5,11 @@ import java.util.concurrent.Semaphore;
 public class Bucket {
     private final Semaphore tokens;
     private final int maxSize;
+    private final Logger logger;
+    
     private int totalTokensAdded = 0;
     private int totalPacketsSent = 0;
     private int totalPacketsDiscarded = 0;
-    private final Logger logger;
-
 
     public Bucket(int maxSize, Logger logger) {
         this.maxSize = maxSize;
@@ -21,8 +21,6 @@ public class Bucket {
     private static final String GREEN = "\u001B[32m";
     private static final String RED = "\u001B[31m";
     private static final String YELLOW = "\u001B[33m";
-    private static final String RESET = "\u001B[0m";
-
 
     public synchronized boolean addToken() {
         if (tokens.availablePermits() < maxSize) {
@@ -65,16 +63,11 @@ public class Bucket {
         }
 
         visual.append("] (").append(currentTokens).append("/").append(maxSize).append(" tokens)");
-        System.out.println(visual);
-        System.out.println();
+        logger.visualize(visual.toString());
     }
 
     // Display simulation summary
     public void displaySummary() {
-        System.out.println("\n----- Simulation Summary -----");
-        System.out.println("Total Tokens Added: " + totalTokensAdded);
-        System.out.println("Total Packets Sent: " + totalPacketsSent);
-        System.out.println("Total Packets Discarded: " + totalPacketsDiscarded);
-        System.out.println("------------------------------");
+        logger.displaySummary(totalTokensAdded, totalPacketsSent, totalPacketsDiscarded);
     }
 }

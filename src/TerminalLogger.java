@@ -29,4 +29,18 @@ public class TerminalLogger implements Logger {
     public void logError(String message) {
         log(message, RED);
     }
+    
+    @Override
+    public void visualize(String visualization) {
+        System.out.println(visualization);
+    }
+
+    @Override
+    public void displaySummary(int totalTokensAdded, int totalPacketsSent, int totalPacketsDiscarded) {
+        System.out.println("\n----- Simulation Summary -----");
+        System.out.println(YELLOW + "Total Tokens Added: " + totalTokensAdded + RESET);
+        System.out.println(YELLOW + "Total Packets Sent: " + totalPacketsSent + RESET);
+        System.out.println(RED + "Total Packets Discarded: " + totalPacketsDiscarded + RESET);
+        System.out.println("------------------------------");
+    }
 }
