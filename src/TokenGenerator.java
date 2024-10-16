@@ -12,12 +12,10 @@ public class TokenGenerator extends Thread {
     public void run() {
         while (running) {
             if (bucket.addToken()) {
-                System.out.println("Token added successfully.");
             } else {
-                System.out.println("Bucket is full!");
             }
             try {
-                Thread.sleep(500); 
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;

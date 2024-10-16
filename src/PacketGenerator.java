@@ -12,7 +12,7 @@ public class PacketGenerator extends Thread {
     public void run() {
         while (running) {
             int packetSize = 1 + (int) (Math.random() * 5); // Random packet size between 1-5
-            boolean sent = bucket.sendPacket(packetSize);
+            bucket.sendPacket(packetSize);
             try {
                 Thread.sleep(1000 + (int) (Math.random() * 2000)); // Random interval
             } catch (InterruptedException e) {

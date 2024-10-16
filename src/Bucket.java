@@ -16,19 +16,19 @@ public class Bucket {
         this.tokens = new Semaphore(0);
     }
 
-    // Logging method with timestamp and separator
-    public void log(String message, String color) {
-        String timestamp = new SimpleDateFormat("HH:mm:ss").format(new Date());
-        System.out.println(color + "[" + timestamp + "] " + message + RESET);
-    }
 
-    // ANSI color codes for output
+    // ANSI color codes for better visibility
     private static final String GREEN = "\u001B[32m";
     private static final String RED = "\u001B[31m";
     private static final String YELLOW = "\u001B[33m";
     private static final String RESET = "\u001B[0m";
 
-    // Method to add a token to the bucket
+    // Log messages with timestamp
+    public void log(String message, String color) {
+        String timestamp = new SimpleDateFormat("HH:mm:ss").format(new Date());
+        System.out.println(color + "[" + timestamp + "] " + message + RESET);
+    }
+
     public synchronized boolean addToken() {
         if (tokens.availablePermits() < maxSize) {
             tokens.release();
@@ -41,7 +41,6 @@ public class Bucket {
         return false;
     }
 
-    // Method to send a packet of a given size
     public synchronized boolean sendPacket(int size) {
         log("Packet of size " + size + " arrived.", YELLOW);
 
@@ -55,18 +54,19 @@ public class Bucket {
             tokens.acquireUninterruptibly();
         }
         totalPacketsSent++;
-        log("Forwarded packet. Remaining tokens: " + tokens.availablePermits(), GREEN);
+        log("Packet of size " + size + " sent successfully.", GREEN);
+        log("Remaining tokens: " + tokens.availablePermits(), GREEN);
         visualize();
         return true;
     }
 
-    // Method to visualize the bucket
+    // Visualize the bucket state with alternative Unicode circles
     private void visualize() {
         int currentTokens = tokens.availablePermits();
         StringBuilder visual = new StringBuilder("Bucket: [");
 
         for (int i = 0; i < maxSize; i++) {
-            visual.append(i < currentTokens ? "●" : "○");
+            visual.append(i < currentTokens ? "⬤" : "◯");
         }
 
         visual.append("] (").append(currentTokens).append("/").append(maxSize).append(" tokens)");
@@ -74,7 +74,7 @@ public class Bucket {
         System.out.println();
     }
 
-    // Method to display a summary of the simulation
+    // Display simulation summary
     public void displaySummary() {
         System.out.println("\n----- Simulation Summary -----");
         System.out.println("Total Tokens Added: " + totalTokensAdded);

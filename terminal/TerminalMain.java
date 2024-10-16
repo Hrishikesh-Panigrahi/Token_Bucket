@@ -6,7 +6,7 @@ import src.PacketGenerator;
 
 public class TerminalMain {
     public static void main(String[] args) {
-        Bucket bucket = new Bucket(10);  // Create bucket with size 10
+        Bucket bucket = new Bucket(10);  
         TokenGenerator tokenGen = new TokenGenerator(bucket);
         PacketGenerator packetGen = new PacketGenerator(bucket);
 
