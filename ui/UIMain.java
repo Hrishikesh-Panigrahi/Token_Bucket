@@ -7,31 +7,35 @@ import src.UILogger;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UIMain {
+    private static final int WINDOW_WIDTH = 600;
+    private static final int WINDOW_HEIGHT = 400;
+    
     public static void main(String[] args) {
-        if (args.length < 3) {
-            System.out.println("Usage: java TerminalMain <bucket_size> <token_rate(ms)> <packet_rate(ms)>");
-            System.exit(1);
-        }
+        int bucketSize = 10;
+        int tokenRate = 1000;
+        int packetRate = 1500;
 
-        int bucketSize = Integer.parseInt(args[0]);
-        int tokenRate = Integer.parseInt(args[1]);
-        int packetRate = Integer.parseInt(args[2]);
+        if (args.length == 3) {
+            bucketSize = Integer.parseInt(args[0]);
+            tokenRate = Integer.parseInt(args[1]);
+            packetRate = Integer.parseInt(args[2]);
+        }
 
         JFrame frame = new JFrame("Token Bucket Simulator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 300);
+        frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        JTextArea logArea = new JTextArea(8, 30);
-        logArea.setEditable(false);
-        JScrollPane logScrollPane = new JScrollPane(logArea);
+        AnimationPanel animationPanel = new AnimationPanel(bucketSize);
+        JScrollPane scrollPane = new JScrollPane(animationPanel);
 
-        UILogger logger = new UILogger(logArea);
-        Bucket bucket = new Bucket(10, logger);
-
-        TokenGenerator tokenGen = new TokenGenerator(bucket, 1000);
-        PacketGenerator packetGen = new PacketGenerator(bucket, 2000);
+        UILogger logger = new UILogger(animationPanel.getLogArea());
+        Bucket bucket = new Bucket(bucketSize, logger);
+        TokenGenerator tokenGen = new TokenGenerator(bucket, tokenRate);
+        PacketGenerator packetGen = new PacketGenerator(bucket, packetRate);
 
         JButton startButton = new JButton("Start Simulation");
         JButton stopButton = new JButton("Stop Simulation");
@@ -54,7 +58,7 @@ public class UIMain {
         buttonPanel.add(stopButton);
 
         frame.setLayout(new BorderLayout());
-        frame.add(logScrollPane, BorderLayout.CENTER);
+        frame.add(scrollPane, BorderLayout.CENTER);
         frame.add(buttonPanel, BorderLayout.SOUTH);
         frame.setVisible(true);
     }
