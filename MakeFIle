@@ -1,0 +1,30 @@
+# Variables for directories and sources
+SRC_DIR = src
+BIN_DIR = bin
+TERMINAL_DIR = terminal
+
+# Java source files
+SOURCES = $(SRC_DIR)/*.java $(TERMINAL_DIR)/TerminalMain.java
+
+# Java commands
+JAVAC = javac
+JAVA = java
+
+# Compilation options
+JFLAGS = -d $(BIN_DIR)
+RUNTIME_ARGS = $(ARGS)
+
+# Default target: compile and run
+run: compile
+	$(JAVA) -cp $(BIN_DIR) terminal.TerminalMain $(RUNTIME_ARGS)
+
+# Compile all Java sources into the bin directory
+compile:
+	if not exist $(BIN_DIR) mkdir $(BIN_DIR)
+	$(JAVAC) $(JFLAGS) $(SOURCES)
+
+# Clean the bin directory
+clean:
+	if exist $(BIN_DIR) rmdir /s /q $(BIN_DIR)
+
+.PHONY: run compile clean

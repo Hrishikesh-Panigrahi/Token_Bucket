@@ -1,0 +1,34 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "TerminalMain",
+            "request": "launch",
+            "mainClass": "terminal.TerminalMain",
+            "projectName": "TokenBucketVisualization_ec3ad343"
+        },
+        {
+            "type": "java",
+            "name": "UIMain",
+            "request": "launch",
+            "mainClass": "ui.UIMain",
+            "projectName": "TokenBucketVisualization_ec3ad343"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "All",
+            "configurations": ["TerminalMain", "UIMain"]
+        }
+    ]
+}
